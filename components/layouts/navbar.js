@@ -21,7 +21,7 @@ import NextLink from 'next/link'
 
 const LinkItem = ({ href, path, children }) => {
   const active = path === href
-  const inActiveColor = useColorModeValue('gray.200', 'whiteAlpha.900')
+  const inActiveColor = useColorModeValue('gray.900', 'whiteAlpha.900')
 
   return (
     <NextLink href={href}>
@@ -46,7 +46,7 @@ const NavBar = props => {
       w={'100%'}
       bg={useColorModeValue('#ffffff40', '#20202380')}
       css={{ backdropFilter: 'blur(10px)' }}
-      zIndex={2}
+      zIndex={1}
       {...props}
     >
       <Container
@@ -75,6 +75,19 @@ const NavBar = props => {
             Works
           </LinkItem>
         </Stack>
+
+        <Box flex={1} align={'right'}>
+          <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon />}
+                variant={'outline'}
+                aria-label={'Options'}
+              />
+            </Menu>
+          </Box>
+        </Box>
       </Container>
     </Box>
   )
