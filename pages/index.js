@@ -1,11 +1,17 @@
+import { BioSection, BioYear } from '../components/layouts/bio'
 import {
   Box,
+  Button,
   Container,
   Heading,
   Image,
+  Link,
   useColorModeValue,
 } from '@chakra-ui/react'
 
+import { ChevronRightIcon } from '@chakra-ui/icons'
+import NextLink from 'next/link'
+import Paragraph from '../components/layouts/paragraph'
 import Section from '../components/layouts/section'
 
 const Page = () => {
@@ -53,7 +59,48 @@ const Page = () => {
         <Heading as="h3" variant="section-title">
           Work
         </Heading>
-        <p>Paragraph</p>
+        <Paragraph>
+          Im a freelancer <Link to="/works/inkdrop">Inkdrop</Link>.
+        </Paragraph>
+        <Box align="center" my={4}>
+          <NextLink href="/works">
+            <Button rightIcon={<ChevronRightIcon />} colorScheme="teal">
+              My portfolio
+            </Button>
+          </NextLink>
+        </Box>
+      </Section>
+
+      <Section delay={0.2}>
+        <Heading as="h3" variant="section-title">
+          Bio
+        </Heading>
+        <BioSection>
+          <BioYear>1996</BioYear>
+          Born in Lahore, Pakistan
+        </BioSection>
+        <BioSection>
+          <BioYear>2021</BioYear>
+          Completed Bachelors in Computer Science from Comsats University,
+          Lahore
+        </BioSection>
+
+        <BioSection>
+          <BioYear>2015</BioYear>
+          Completed Fsc Pre-Engineering from Forman Christian College, Lahore
+        </BioSection>
+
+        <BioSection>
+          <BioYear>2013</BioYear>
+          Completed O-Levels from Divisional Public School, Lahore
+        </BioSection>
+      </Section>
+
+      <Section delay={0.1}>
+        <Heading as="h3" variant="section-title">
+          I love
+        </Heading>
+        <Paragraph>Art, Music, Gaming, Machine Learning </Paragraph>
       </Section>
     </Container>
   )
