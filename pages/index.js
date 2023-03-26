@@ -6,10 +6,15 @@ import {
   Heading,
   Image,
   Link,
+  List,
+  ListItem,
+  SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { ChevronRightIcon, EmailIcon } from '@chakra-ui/icons'
+import { IoLogoGithub, IoLogoInstagram, IoLogoTwitter } from 'react-icons/io5'
 
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { GridItem } from '../components/layouts/grid-item'
 import Layout from '../components/layouts/article'
 import NextLink from 'next/link'
 import Paragraph from '../components/layouts/paragraph'
@@ -104,9 +109,99 @@ const Page = () => {
           </Heading>
           <Paragraph>Art, Music, Gaming, Machine Learning </Paragraph>
         </Section>
+
+        <Section delay={0.3}>
+          <Heading as="h3" variant="section-title">
+            On the web
+          </Heading>
+          <List>
+            <ListItem>
+              <Link href="https://github.com/craftzdog" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="teal"
+                  leftIcon={<IoLogoGithub />}
+                >
+                  @craftzdog
+                </Button>
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="https://twitter.com/inkdrop_app" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="teal"
+                  leftIcon={<IoLogoTwitter />}
+                >
+                  @inkdrop_app (English)
+                </Button>
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="https://twitter.com/craftzdog" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="teal"
+                  leftIcon={<IoLogoTwitter />}
+                >
+                  @craftzdog (日本語)
+                </Button>
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link href="https://instagram.com/craftzdog" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="teal"
+                  leftIcon={<IoLogoInstagram />}
+                >
+                  @craftzdog
+                </Button>
+              </Link>
+            </ListItem>
+          </List>
+
+          <SimpleGrid columns={[1, 2, 2]} gap={6}>
+            <GridItem
+              href="https://www.youtube.com/devaslife"
+              title="Dev as Life"
+              thumbnail={'/images/yoru.jpg'}
+            >
+              My YouTube channel (&gt;150k subs)
+            </GridItem>
+            <GridItem
+              href="https://www.inkdrop.app/"
+              title="Inkdrop"
+              thumbnail={'/images/yoru.jpg'}
+            >
+              A Markdown note-taking app
+            </GridItem>
+          </SimpleGrid>
+
+          <Heading as="h3" variant="section-title">
+            Newsletter
+          </Heading>
+          <p>
+            Join me on a behind-the-scenes coding journey. Weekly updates on
+            projects, tutorials, and videos
+          </p>
+
+          <Box align="center" my={4}>
+            <Button
+              as={NextLink}
+              href="https://www.devas.life/"
+              scroll={false}
+              leftIcon={<EmailIcon />}
+              colorScheme="teal"
+            >
+              Sign up my newsletter here
+            </Button>
+          </Box>
+        </Section>
       </Container>
     </Layout>
   )
 }
 
 export default Page
+export { getServerSideProps } from '../components/chakra'
