@@ -20,7 +20,15 @@ import NextLink from 'next/link'
 import Paragraph from '../components/layouts/paragraph'
 import Section from '../components/layouts/section'
 
-const Page = () => {
+const Page = ({ book }) => {
+  // const query = encodeURIComponent(`*[ _type == "book" ]`)
+  // const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
+  // const response = await fetch(url).then(res => res.json())
+
+  // console.log(response, 'respo')
+
+  console.log(book, 'PARAMS')
+
   return (
     <Layout>
       <Container>
@@ -203,5 +211,18 @@ const Page = () => {
   )
 }
 
+export async function getServerSideProps() {
+  const query = encodeURIComponent(`*[ _type == "book" ]`)
+  const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
+  const response = await fetch(url).then(res => res.json())
+  console.log(response, 'responseresponse')
+  return {
+    props: {
+      book: response.result,
+    },
+  }
+}
+
 export default Page
-export { getServerSideProps } from '../components/chakra'
+
+// export { getServerSideProps } from '../components/chakra'
