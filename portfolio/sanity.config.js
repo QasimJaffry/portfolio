@@ -6,8 +6,6 @@ import {visionTool} from '@sanity/vision'
 export default defineConfig({
   name: 'default',
   title: 'portfolio',
-  // dataset: `${process.env.SANITY_DATABASE}`,
-  // projectId: `${process.env.SANITY_PROJECT_ID}`,
   projectId: 'kodkuimt',
   dataset: 'production',
 
