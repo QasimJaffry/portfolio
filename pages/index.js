@@ -2,6 +2,7 @@ import { BioSection, BioYear } from '../components/layouts/bio'
 import {
   Box,
   Button,
+  Center,
   Container,
   Heading,
   Image,
@@ -19,15 +20,29 @@ import Layout from '../components/layouts/article'
 import NextLink from 'next/link'
 import Paragraph from '../components/layouts/paragraph'
 import Section from '../components/layouts/section'
+import { createClient } from '@sanity/client'
+import { useNextSanityImage } from 'next-sanity-image'
 
-const Page = ({ book }) => {
-  // const query = encodeURIComponent(`*[ _type == "book" ]`)
+const configuredSanityClient = createClient({
+  dataset: `${process.env.SANITY_DATABASE}`,
+  projectId: `${process.env.SANITY_PROJECT_ID}`,
+  useCdn: process.env.NODE_ENV === 'production',
+})
+
+const Page = ({ data }) => {
+  const {
+    name,
+    profile_photo,
+    profession,
+    short_description,
+    full_description,
+  } = data
+  // const query = encodeURIComponent(`*[ _type == "data" ]`)
   // const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
   // const response = await fetch(url).then(res => res.json())
 
   // console.log(response, 'respo')
-
-  console.log(book, 'PARAMS')
+  const imageProps = useNextSanityImage(configuredSanityClient, profile_photo)
 
   return (
     <Layout>
@@ -39,32 +54,31 @@ const Page = ({ book }) => {
           mb={6}
           align={'center'}
         >
-          Hello, I&apos;m a full-stack developer based in Pakistan!
+          {short_description}
         </Box>
 
         <Box display={{ md: 'flex' }}>
-          <Box flexGrow={1}>
-            <Heading as="h2" variant={'page-title'}>
-              Qasim Hassan
-            </Heading>
+          <Box>
+            <Heading as="h2">{name}</Heading>
 
-            <p>Digital Craftzman </p>
+            <p>{profession}</p>
           </Box>
 
           <Box
-            flexShrink={0}
             mt={{ base: 4, md: 0 }}
             ml={{ md: 6 }}
-            align="center"
+            maxWidth={{ base: '40%', md: '25%' }}
+            maxHeight={{ base: '40%', md: '25%' }}
+            align={'center'}
+            margin={'auto'}
           >
             <Image
               borderColor="whiteAlpha.800"
               borderWidth={2}
               borderStyle="solid"
-              maxWidth="100px"
-              display="inline-block"
               borderRadius="full"
-              src="/images/yoru.jpg"
+              src={imageProps.src}
+              loader={imageProps.loader}
               alt="Profile Image"
             />
           </Box>
@@ -74,9 +88,7 @@ const Page = ({ book }) => {
           <Heading as="h3" variant="section-title">
             Work
           </Heading>
-          <Paragraph>
-            Im a freelancer <Link to="/works/inkdrop">Inkdrop</Link>.
-          </Paragraph>
+          <Paragraph>{full_description}</Paragraph>
           <Box align="center" my={4}>
             <NextLink href="/works">
               <Button rightIcon={<ChevronRightIcon />} colorScheme="teal">
@@ -211,17 +223,48 @@ const Page = ({ book }) => {
   )
 }
 
+console.log(process.env.SANITY_PROJECT_ID, 'process.env.SANITY_PROJECT_ID')
+
 export async function getServerSideProps() {
-  const query = encodeURIComponent(`*[ _type == "book" ]`)
-  const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
-  const response = await fetch(url).then(res => res.json())
-  console.log(response, 'responseresponse')
+  const response = await configuredSanityClient.fetch(
+    `{
+			"aboutMeData": *[_type == "aboutMe"][0] {
+        ...,
+				profile_photo {
+					asset->{
+						...,
+						metadata
+					}
+				}
+			}
+		}`
+  )
+
+  let data = response.aboutMeData
+
   return {
     props: {
-      book: response.result,
+      data,
     },
   }
 }
+
+//   const query = encodeURIComponent(`*[ _type == "aboutMe" ] profile_photo {
+//     asset->{
+//       ...,
+//       metadata
+//     }
+//   }
+// }`)
+//   const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
+//   const response = await fetch(url).then(res => res.json())
+//   console.log(response, 'responseresponse')
+//   return {
+//     props: {
+//       data: response.result,
+//     },
+//   }
+// }
 
 export default Page
 

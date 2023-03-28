@@ -1,4 +1,4 @@
-import firstSchema from './firstSchema'
+import aboutSchema from './aboutSchema'
 import secondSchema from './secondSchema'
 
-export const schemaTypes = [firstSchema, secondSchema]
+export const schemaTypes = [aboutSchema]
