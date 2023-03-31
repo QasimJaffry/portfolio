@@ -1,4 +1,7 @@
 import aboutSchema from './aboutSchema'
-import secondSchema from './secondSchema'
+import bioSchema from './bioSchema'
+import educationSchema from './educationSchema'
+import personalSchema from './personalSchema'
+import socialSchema from './socialSchema'
 
-export const schemaTypes = [aboutSchema]
+export const schemaTypes = [aboutSchema, bioSchema, educationSchema, socialSchema, personalSchema]
