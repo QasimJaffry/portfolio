@@ -36,7 +36,13 @@ const Page = ({ data }) => {
     profession,
     short_description,
     full_description,
-  } = data
+  } = data.about
+
+  const { dob_year, hobbies, occupation } = data.bio
+
+  const { designation, year } = data.education
+
+  const { link, social_icon, social_name } = data.social
   // const query = encodeURIComponent(`*[ _type == "data" ]`)
   // const url = `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`
   // const response = await fetch(url).then(res => res.json())
@@ -228,19 +234,15 @@ console.log(process.env.SANITY_PROJECT_ID, 'process.env.SANITY_PROJECT_ID')
 export async function getServerSideProps() {
   const response = await configuredSanityClient.fetch(
     `{
-			"aboutMeData": *[_type == "aboutMe"][0] {
-        ...,
-				profile_photo {
-					asset->{
-						...,
-						metadata
-					}
-				}
-			}
+			"personal": *[_type == "personal"][0]{about->, bio->, 
+      
+        "education": education[]->, 
+       "social": social[]->} 
+       
 		}`
   )
 
-  let data = response.aboutMeData
+  let data = response.personal
 
   return {
     props: {
