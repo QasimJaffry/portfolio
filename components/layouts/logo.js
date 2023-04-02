@@ -37,7 +37,7 @@ const Logo = () => {
       <LogoBox>
         <Flex align={'center'}>
           <Image
-            class="rotate"
+            className="rotate"
             src={logoImg}
             width={70}
             height={70}
