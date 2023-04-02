@@ -3,7 +3,6 @@ import { Container, Divider, Heading, SimpleGrid } from '@chakra-ui/react'
 import Section from '../components/layouts/section'
 import { WorkGridItem } from '../components/layouts/grid-item'
 import { createClient } from '@sanity/client'
-import { useNextSanityImage } from 'next-sanity-image'
 
 const configuredSanityClient = createClient({
   dataset: `${process.env.SANITY_DATABASE}`,
@@ -13,7 +12,6 @@ const configuredSanityClient = createClient({
 })
 
 const Works = ({ data }) => {
-  console.log(data, 'data3123123132123132')
   return (
     <Container>
       <Heading as="h3" fontSize={20} mb={4}>
@@ -22,11 +20,10 @@ const Works = ({ data }) => {
 
       <SimpleGrid columns={[1, 1, 2]} gap={6}>
         {data.map(project => {
-          console.log(project, 'prokec')
           return (
             <Section delay={0.3} key={project._id}>
               <WorkGridItem
-                id="inkdrop"
+                id={project._id}
                 title={project.project_title}
                 thumbnail={project.cover_photo}
               >

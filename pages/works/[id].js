@@ -4,8 +4,31 @@ import { Meta, Title, WorkImage } from '../../components/layouts/work'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import Layout from '../../components/layouts/article'
 import P from '../../components/layouts/paragraph'
+import { createClient } from '@sanity/client'
+import { useRouter } from 'next/router'
 
-const Work = () => {
+const configuredSanityClient = createClient({
+  dataset: `${process.env.SANITY_DATABASE}`,
+  projectId: `${process.env.SANITY_PROJECT_ID}`,
+  useCdn: process.env.NODE_ENV === 'production',
+  apiVersion: '2023-04-03',
+})
+
+export default async function Work() {
+  const router = useRouter()
+  const id = router.query.id
+  console.log(id, 'router')
+
+  const data = await configuredSanityClient.fetch(
+    `{
+			"projects": *[_type == "project"]
+		}`
+  )
+
+  const res = await data.json()
+
+  console.log(res, 'ROOPOPOPO')
+
   return (
     <Layout title={'Inkdrop'}>
       <Container>
@@ -44,5 +67,4 @@ const Work = () => {
   )
 }
 
-export default Work
 // export { getServerSideProps } from '../components/chakra'
