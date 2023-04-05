@@ -1,67 +1,106 @@
-import { Badge, Container, Link, List, ListItem } from '@chakra-ui/react'
+import { Box, Container, Link, List, ListItem } from '@chakra-ui/react'
 import { Meta, Title, WorkImage } from '../../components/layouts/work'
 
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import Layout from '../../components/layouts/article'
 import P from '../../components/layouts/paragraph'
-import { createClient } from '@sanity/client'
-import { useRouter } from 'next/router'
+import { sanityClient } from '../../sanity'
 
-const configuredSanityClient = createClient({
-  dataset: `${process.env.SANITY_DATABASE}`,
-  projectId: `${process.env.SANITY_PROJECT_ID}`,
-  useCdn: process.env.NODE_ENV === 'production',
-  apiVersion: '2023-04-03',
-})
+export async function getServerSideProps(context) {
+  const { id } = context.params
 
-export default async function Work() {
-  const router = useRouter()
-  const id = router.query.id
-  console.log(id, 'router')
-
-  const data = await configuredSanityClient.fetch(
-    `{
-			"projects": *[_type == "project"]
-		}`
+  const response = await sanityClient.fetch(
+    `{"project": *[_type == "project" && _id == "${id}"][0]}`
   )
 
-  const res = await data.json()
+  let data = response.project
 
-  console.log(res, 'ROOPOPOPO')
+  return {
+    props: {
+      data,
+    },
+  }
+}
 
+export default function Work({ data }) {
   return (
-    <Layout title={'Inkdrop'}>
+    <Layout title={data.project_title}>
       <Container>
-        <Title>
-          Inkdrop <Badge>2016</Badge>
-        </Title>
-        <P>An app which does stuff</P>
-        <List ml={4} my={4}>
-          <ListItem>
-            <Meta>Website</Meta>
-            <Link href="https://www.inkdrop.app/">
-              https://www.inkdrop.app/ <ExternalLinkIcon mx="2px" />
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Meta>Platform</Meta>
-            <span>Windows/macOS/Linux/iOS/Android</span>
-          </ListItem>
-          <ListItem>
-            <Meta>Stack</Meta>
-            <span>NodeJS, Electron, React Native</span>
-          </ListItem>
-          <ListItem>
-            <Meta>Blogpost</Meta>
-            <Link href="https://blog.inkdrop.app/how-ive-attracted-the-first-500-paid-users-for-my-saas-that-costs-5-mo-7a5b94b8e820">
-              How I’ve Attracted The First 500 Paid Users For My SaaS That Costs
-              $5/mo <ExternalLinkIcon mx="2px" />
-            </Link>
-          </ListItem>
-        </List>
+        <Box mt={10}>
+          <Title>{data.project_title}</Title>
+          <P>{data.project_description}</P>
+          <List ml={4} my={4}>
+            {data?.website && (
+              <ListItem>
+                <Meta>Website</Meta>
+                <Link href={`${data?.website}/`}>
+                  {data?.website} <ExternalLinkIcon mx="2px" />
+                </Link>
+              </ListItem>
+            )}
 
-        <WorkImage src="/images/yoru.jpg" alt="Inkdrop" />
-        <WorkImage src="/images/yoru.jpg" alt="Inkdrop" />
+            {data?.android_link && (
+              <ListItem>
+                <Meta>Google Play</Meta>
+                <Link href={`${data?.android_link}/`}>
+                  {data?.android_link} <ExternalLinkIcon mx="2px" />
+                </Link>
+              </ListItem>
+            )}
+
+            {data?.ios_link && (
+              <ListItem>
+                <Meta>App Store</Meta>
+                <Link href={`${data?.ios_link}/`}>
+                  {data?.ios_link} <ExternalLinkIcon mx="2px" />
+                </Link>
+              </ListItem>
+            )}
+
+            {data?.platform && (
+              <ListItem>
+                <Meta>Platform</Meta>
+                <span>{data.platform}</span>
+              </ListItem>
+            )}
+
+            {data?.stack && (
+              <ListItem>
+                <Meta>Stack</Meta>
+                <span>{data.stack}</span>
+              </ListItem>
+            )}
+
+            {data?.features && (
+              <ListItem>
+                <Meta>Main Features</Meta>
+                <span>{data.features}</span>
+              </ListItem>
+            )}
+
+            {data?.blog && (
+              <ListItem>
+                <Meta>Blogpost</Meta>
+                <Link href="https://blog.inkdrop.app/how-ive-attracted-the-first-500-paid-users-for-my-saas-that-costs-5-mo-7a5b94b8e820">
+                  How I’ve Attracted The First 500 Paid Users For My SaaS That
+                  Costs $5/mo <ExternalLinkIcon mx="2px" />
+                </Link>
+              </ListItem>
+            )}
+          </List>
+
+          {data.project_images && data.project_images.length > 0
+            ? data.project_images.map(images => {
+                return (
+                  <WorkImage
+                    key={images}
+                    src={images}
+                    alt={data.project_title}
+                  />
+                )
+              })
+            : null}
+        </Box>
       </Container>
     </Layout>
   )

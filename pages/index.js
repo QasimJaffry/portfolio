@@ -17,15 +17,8 @@ import Layout from '../components/layouts/article'
 import NextLink from 'next/link'
 import Paragraph from '../components/layouts/paragraph'
 import Section from '../components/layouts/section'
-import { createClient } from '@sanity/client'
+import { sanityClient } from '../sanity'
 import { useNextSanityImage } from 'next-sanity-image'
-
-const configuredSanityClient = createClient({
-  dataset: `${process.env.SANITY_DATABASE}`,
-  projectId: `${process.env.SANITY_PROJECT_ID}`,
-  useCdn: process.env.NODE_ENV === 'production',
-  apiVersion: '2023-04-03',
-})
 
 const Page = ({ data }) => {
   const {
@@ -40,7 +33,7 @@ const Page = ({ data }) => {
   const { education } = data
   const { social } = data
 
-  const imageProps = useNextSanityImage(configuredSanityClient, profile_photo)
+  const imageProps = useNextSanityImage(sanityClient, profile_photo)
 
   return (
     <Layout>
@@ -168,7 +161,7 @@ const Page = ({ data }) => {
 }
 
 export async function getServerSideProps() {
-  const response = await configuredSanityClient.fetch(
+  const response = await sanityClient.fetch(
     `{
 			"personal": *[_type == "personal"][0]{about->, bio->, 
       

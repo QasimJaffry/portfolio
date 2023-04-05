@@ -1,6 +1,8 @@
 import { Badge, Box, Heading, Image, Link } from '@chakra-ui/react'
 
 import { ChevronRightIcon } from '@chakra-ui/icons'
+import { sanityClient } from '../../sanity'
+import { useNextSanityImage } from 'next-sanity-image'
 
 // import NextLink from 'next/link'
 
@@ -24,7 +26,10 @@ export const Title = ({ children }) => {
 }
 
 export const WorkImage = ({ src, alt }) => {
-  return <Image borderRadius={'lg'} w="full" src={src} alt={alt} mb={4} />
+  const imageProps = useNextSanityImage(sanityClient, src)
+  return (
+    <Image borderRadius={'lg'} w="full" src={imageProps.src} alt={alt} mb={4} />
+  )
 }
 
 export const Meta = ({ children }) => {

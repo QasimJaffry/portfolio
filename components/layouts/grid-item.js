@@ -1,17 +1,10 @@
 import { Box, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react'
 
 import { Global } from '@emotion/react'
-import { createClient } from '@sanity/client'
+import { sanityClient } from '../../sanity'
 import { useNextSanityImage } from 'next-sanity-image'
 
 // import Image from 'next/image'
-
-const configuredSanityClient = createClient({
-  dataset: `${process.env.SANITY_DATABASE}`,
-  projectId: `${process.env.SANITY_PROJECT_ID}`,
-  useCdn: process.env.NODE_ENV === 'production',
-  apiVersion: '2023-04-03',
-})
 
 export const GridItem = ({ children, href, title, thumbnail }) => {
   return (
@@ -36,7 +29,7 @@ export const GridItem = ({ children, href, title, thumbnail }) => {
 }
 
 export const WorkGridItem = ({ children, id, title, thumbnail }) => {
-  const imageProps = useNextSanityImage(configuredSanityClient, thumbnail)
+  const imageProps = useNextSanityImage(sanityClient, thumbnail)
 
   return (
     <Box
