@@ -13,19 +13,36 @@ height: 20px,
 line-height: 20px,
 padding: 10px;
 
-&:hover img {
-    transform: rotate(20deg);
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }
+
+.rotate:hover  {
+  animation: rotation 2s infinite linear;
+}
+
+
 `
 
 const Logo = () => {
-  const logoImg = `/images/logo${useColorModeValue('', '-dark')}.jpg`
+  const logoImg = `/images/logo${useColorModeValue('', '-dark')}.png`
 
   return (
     <Link href={'/'}>
       <LogoBox>
         <Flex align={'center'}>
-          <Image src={logoImg} width={70} height={70} alt={'logo'} />
+          <Image
+            className="rotate"
+            src={logoImg}
+            width={70}
+            height={70}
+            alt={'logo'}
+          />
           <Text
             color={useColorModeValue('gray.800', 'whiteAlpha.900')}
             fontFamily={'M PLUS Rounded 1c'}
